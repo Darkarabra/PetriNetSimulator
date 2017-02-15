@@ -249,30 +249,43 @@ namespace PetriNetApp
                 if (operation == null || operation.Number == process.Operations.Count)
                     return true;
 
-                List<ProcessCheck> ProcessesToCheck = new List<ProcessCheck>();
-                ProcessesToCheck.Add(new ProcessCheck(process, operation.Number));
+                if (bufferNotFull(currentBuffer, MM))
+                    return true;
+
+                List<ProcessConnected> ProcessesToCheck = new List<ProcessConnected>();
+                List<int> CheckedBuffers = new List<int>();
+                CheckedBuffers.Add(currentBuffer.Number);
+                ProcessesToCheck.Add(new ProcessConnected(process, operation.Number));
                 for (int i = 0; i < ProcessesToCheck.Count; i++)
                 {
                     var proc = ProcessesToCheck.ElementAt(i);
+
                     var tmpCurrentBuff = Buffers.First(l => l.Number == proc.process.Operations
                         .First(o => o.Number == proc.fromOperationNumber).MachineNumber);
+
+                    CheckedBuffers.Add(tmpCurrentBuff.Number);
+
+                    if (proc.process.Operations.Where(j => j.Number > proc.fromOperationNumber).ToList().Count == 0)
+                        return true;
+
                     foreach (var op in proc.process.Operations.Where(j => j.Number > proc.fromOperationNumber))
                     {
-                        var buff = Buffers.First(l => l.Number == op.MachineNumber);
-                        if (buff.Number == tmpCurrentBuff.Number)
-                            return false;
-                        if (bufferOk(buff, MM))
+                        var buffer = Buffers.First(l => l.Number == op.MachineNumber);
+                        if (CheckedBuffers.Any(b => b == buffer.Number))
+                            break;
+                        if (bufferNotFull(buffer, MM))
                             return true;
-               
-                        foreach(var ap in buff.ActiveProcesses)
-                        {
-                            foreach(var ao in ap.ActiveOperations)
-                            {
-                                var newcheck = new ProcessCheck(ap.process, ao);
-                                if (!ProcessesToCheck.Any(c => c.fromOperationNumber == ao && c.process == ap.process))
-                                    ProcessesToCheck.Add(newcheck);
-                            }
-                        }
+
+                        //foreach (var ap in buffer.ActiveProcesses)
+                        //{
+                        //    foreach (var ao in ap.ActiveOperations)
+                        //    {
+                        //        var newcheck = new ProcessConnected(ap.process, ao);
+                        //        if (!ProcessesToCheck.Any(c => c.fromOperationNumber == ao && c.process == ap.process))
+                        //            ProcessesToCheck.Add(newcheck);
+                        //    }
+                        //}
+                        ProcessesToCheck.AddRange(buffer.Connected);
                     }
                 }
                 return false;
@@ -438,7 +451,7 @@ namespace PetriNetApp
         }
         #endregion
 
-        public bool bufferOk(Buffer buffer, Matrix<double> MM)
+        public bool bufferNotFull(Buffer buffer, Matrix<double> MM)
         {
             if (MM[buffer.Address.GetValueOrDefault(), 0] > 0 || MM[getMachineAddress(buffer.Number), 0] > 0)
                 return true;

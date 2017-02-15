@@ -68,6 +68,7 @@ namespace PetriNetApp
         void buildMark()
         {
             M = Matrix<double>.Build.Dense(petriNet.Places, 1);
+            Buffers.ForEach(b => b.clearConnected());
             //machines and buffers
             for (int m = 0; m < Machines; m++)
             {
@@ -84,6 +85,10 @@ namespace PetriNetApp
                 Inputs.First(i => i.Number == process.Number).Address = place;
                 Inputs.First(i => i.Number == process.Number).CorrespondingOutput = output;
                 place += process.Operations.Count * 3 + 2;
+                foreach(var o in process.Operations)
+                {
+                    Buffers.First(i => i.Number == o.MachineNumber).Connect(process, o.Number);
+                }
 
             }
         }

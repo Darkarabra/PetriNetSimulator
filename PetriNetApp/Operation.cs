@@ -30,6 +30,8 @@ namespace PetriNetApp
 
         public List<ActiveProcess> ActiveProcesses { get; set; }
 
+        public List<ProcessConnected> Connected { get; set; } 
+
         /// <summary>
         /// adres w tabeli markowań
         /// </summary>
@@ -37,7 +39,7 @@ namespace PetriNetApp
 
         public Buffer() {
             ActiveProcesses = new List<ActiveProcess>();
-
+            Connected = new List<ProcessConnected>();
         }
 
         public Buffer(int number, int capacity)
@@ -45,8 +47,18 @@ namespace PetriNetApp
             Number = number;
             Capacity = capacity;
             ActiveProcesses = new List<ActiveProcess>();
+            Connected = new List<ProcessConnected>();
         }
         
+        public void clearConnected()
+        {
+            Connected.Clear();
+        }
+
+        public void Connect(Process p, int fromOperationNumber)
+        {
+            Connected.Add(new ProcessConnected(p, fromOperationNumber));
+        }
         public void takePlace(Process p, int operationNumber)
         {
             if (this.ActiveProcesses.Any(i => i.process == p))

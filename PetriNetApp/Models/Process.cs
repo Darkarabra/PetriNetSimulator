@@ -57,13 +57,13 @@ namespace PetriNetApp
         }
     }
 
-    public class ProcessCheck
+    public class ProcessConnected
     {
         public Process process { get; set; }
 
         public int fromOperationNumber { get; set; }
 
-        public ProcessCheck(Process p, int number)
+        public ProcessConnected(Process p, int number)
         {
             process = p;
             fromOperationNumber = number;
