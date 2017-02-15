@@ -1,0 +1,17 @@
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\PetriNetApp.exe.config
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\PetriNetApp.exe
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\PetriNetApp.pdb
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.Form1.resources
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.Properties.Resources.resources
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.csproj.GenerateResource.Cache
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.exe
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.pdb
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\MathNet.Numerics.dll
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\MathNet.Numerics.xml
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\obj\Debug\PetriNetApp.csprojResolveAssemblyReference.cache
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\ClosedXML.dll
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\DocumentFormat.OpenXml.dll
+C:\Users\Małgorzata\Desktop\AiR\Mgr\Projekt\PetriNetApp\PetriNetApp\bin\Debug\ClosedXML.pdb
+C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\bin\Debug\PetriNetApp.exe.config
+C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.exe
+C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.pdb

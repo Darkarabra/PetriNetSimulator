@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="PetriNetApp.Controller" BaseTypeListCollapsed="true">
+    <Position X="6.25" Y="0.5" Width="2.75" />
+    <Members>
+      <Method Name="clearProcessesSequence" Hidden="true" />
+      <Property Name="dt" Hidden="true" />
+      <Method Name="getCorrespondingOutput" Hidden="true" />
+      <Method Name="printBuffers" Hidden="true" />
+      <Method Name="printInputs" Hidden="true" />
+      <Method Name="printPreparedTranzitions" Hidden="true" />
+      <Method Name="printSequence" Hidden="true" />
+      <Field Name="stopped" Hidden="true" />
+      <Method Name="submitDefaultData" Hidden="true" />
+      <Field Name="tab" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>EAQAASAAAECASCAaIAABgAAAECEABAADAoQaACK0AwQ=</HashCode>
+      <FileName>Controllers\Controller.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PetriNetApp.DataController">
+    <Position X="11.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\DataController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.TimerController">
+    <Position X="4" Y="1.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAABAAQAAAABAAAAAAAAAQAAAAAAAAAAAAAAABgEAAA=</HashCode>
+      <FileName>Controllers\TimerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.TransistionController">
+    <Position X="9.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ECAAAjAABABAABAQABCAAAIAEABAACABACCQQCAgIAA=</HashCode>
+      <FileName>Controllers\TransistionController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Form1" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>MQNAAACEADRIABEsgoKACGCCAQEgQACAACQAAAEgQDA=</HashCode>
+      <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="PetriNetApp.PetriNet">
+    <Position X="4" Y="4.25" Width="2" />
+    <Members>
+      <Field Name="INPUT" Hidden="true" />
+      <Field Name="IO_STATES" Hidden="true" />
+      <Field Name="MACHINE_COMPONENTS" Hidden="true" />
+      <Field Name="MIDDLE_STATES" Hidden="true" />
+      <Field Name="OUT_TRANSITION" Hidden="true" />
+      <Field Name="OUTPUT" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAGQAAAAACAAQAAAAAAAQCAAAAQABUMAEACAAAAA=</HashCode>
+      <FileName>Models\PetriNet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Process">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAIAAEAEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Process.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Timer">
+    <Position X="2.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAABIAAQAAAAAAAAAAAAAABQA=</HashCode>
+      <FileName>Models\Timer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Transition">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAEAAAACAAEAAAAAAARAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Transition.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Operation">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAIAAQAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Operation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Buffer">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAEAAAAACAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Operation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PetriNetApp.Input">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACAAAEAAAAAAAAAAAAACAAAgAAAAAAA=</HashCode>
+      <FileName>Operation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="PetriNetApp.TimeChangeListener">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\TimeChangeListener.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
