@@ -149,18 +149,18 @@ namespace PetriNetApp
         private bool transitionPrepared(Vector<double> T, TimerController timer, Matrix<double> M)
         {
             int inputs = T.Where(i => i < 0).Count();
-            int count = 0;
+            int preparedInputs = 0;
             for (int i = 0; i < petriNet.Places; i++)
             {
                 if (T[i] < 0 && M[i, 0] > 0)
                 {
-                    count++;
+                    preparedInputs++;
                 }
             }
             int input = transitionFromMachine(T);
             int output = transitionToMachine(T);
             int buffer = transitionToBufferAddress(T);
-            if (inputs == count)
+            if (inputs == preparedInputs)
             {
                 if ((input > 0 && !timer.machineIsActive(input)) ||
                     (output > 0 && !timer.machineIsActive(output) && machineInCapacityLimits(output, M)))
@@ -276,6 +276,8 @@ namespace PetriNetApp
                         if (bufferNotFull(buffer, MM))
                             return true;
 
+                        CheckedBuffers.Add(buffer.Number);
+
                         //foreach (var ap in buffer.ActiveProcesses)
                         //{
                         //    foreach (var ao in ap.ActiveOperations)
@@ -293,62 +295,6 @@ namespace PetriNetApp
 
             return true;
         }
-
-
-        //public bool transitionIsSafe(Vector<double> T, int number, Matrix<double> MM,
-        //    int buffersCanBeZero)
-        //{
-        //    int bufferCount = 0;
-        //    foreach (var b in Buffers)
-        //    {
-
-        //        if (MM[b.Address.GetValueOrDefault(), 0] == 0)
-        //            bufferCount++;
-
-        //    }
-        //    if (bufferCount > buffersCanBeZero)
-        //        return false;
-
-        //    int fromBufferNumber = transitionFromBuffer(T);
-        //    int toBufferNumber = transitionToBuffer(T);
-        //    if (fromBufferNumber > 0)
-        //    {
-        //        int processNumber = getProcessNumber(number - 1);
-        //        //Console.Out.WriteLine("process: " + processNumber);
-        //        var process = getProcess(number - 1);
-        //        var operation = getOperation(process, number - 1);
-        //        var currentBuffer = Buffers.First(i => i.Number == fromBufferNumber);
-
-
-        //        //last operation in process
-        //        if (operation == null || operation.Number == process.Operations.Count)
-        //            return true;
-
-
-        //foreach (var o in process.Operations.Where(i => i.Number > OPnumber).OrderBy(i => i.Number))
-        //{
-
-        //    var nextBuffer = Buffers.First(i => i.Number == o.MachineNumber);
-        //    if (nextBuffer.Number == fromBufferNumber)
-        //    {
-        //        //Console.Out.WriteLine("!!!!!!!  Transition not safe (b). Nr: " + number);
-        //        return false;
-        //    }
-
-        //    var checkResult = checkBuffer(nextBuffer, MM);
-        //    if (checkResult == true)
-        //        return true;
-        //    else
-        //    {
-
-        //    }
-        //}
-        ////Console.Out.WriteLine("!!!!!!!!!!! Transition not safe. Nr: " + number);
-        //return false;
-        //    }
-
-        //    return true;
-        //}
 
         private void SortTransitions()
         {
