@@ -49,6 +49,8 @@ namespace PetriNetApp
             ActiveProcesses = new List<ActiveProcess>();
             Connected = new List<ProcessConnected>();
         }
+
+
         
         public void clearConnected()
         {
@@ -73,14 +75,18 @@ namespace PetriNetApp
 
         public void emptyPlace(Process p, int operationNumber)
         {
-            var active = this.ActiveProcesses.First(i => i.process == p);
-            if (active.Count > 1)
+            var active = this.ActiveProcesses.FirstOrDefault(i => i.process == p);
+            if (active?.Count > 1)
             {
                 active.Count--;
                 active.ActiveOperations.Remove(operationNumber);
             }
             else
-                ActiveProcesses.Remove(active);
+            {
+                if(active != null)
+                    ActiveProcesses.Remove(active);
+            }
+                
         }
     }
 

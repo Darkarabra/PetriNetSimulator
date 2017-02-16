@@ -185,13 +185,14 @@ namespace PetriNetApp
                 //int buffersCanBeZero = 0;
                 //while (buffersCanBeZero < 2)
                 //{
+                
                 for (int i = 0; i < PreparedTransitions.Count; i++)
                 {
                     T = Vector<double>.Build.Dense(petriNet.Tranzitions, 0);
                     var Tr = PreparedTransitions.ElementAt(i);
                     T[Tr.Number - 1] = 1;
                     var MM = M + petriNet.I * T.ToColumnMatrix();
-                    if (transitionIsSafe(Tr.IO, Tr.Number, MM/*,buffersCanBeZero*/))
+                    if (transitionIsSafe(Tr.IO, Tr.Number,M, MM, Tr))
                     {
                         PreparedTransitions.RemoveAt(i);
                         //Console.Out.WriteLine("Transition: " + Tr.Number);
@@ -208,22 +209,8 @@ namespace PetriNetApp
                                 timer.StartOperation(operation, processNumber);
                             }
                         }
-                        var fromBuffer = transitionFromBuffer(Tr.IO);
-                        if (fromBuffer > 0)
-                        {
-                            Process process = getProcess(Tr.Number - 1);
-                            var operation = Processes.First(p => p.Number == process.Number)
-                                   .Operations.First(o => o.MachineNumber == fromBuffer);
-                            Buffers.FirstOrDefault(b => b.Number == fromBuffer).takePlace(process, operation.Number);
-                        }
-                        var toBuffer = transitionToBuffer(Tr.IO);
-                        if (toBuffer > 0)
-                        {
-                            Process process = getProcess(Tr.Number - 1);
-                            var operation = Processes.First(p => p.Number == process.Number)
-                                   .Operations.First(o => o.MachineNumber == toBuffer);
-                            Buffers.FirstOrDefault(b => b.Number == toBuffer).emptyPlace(process, operation.Number);
-                        }
+                        var tmpBuffers = Buffers;
+                        Buffers = updateBuffers(tmpBuffers, Tr);
                         return T;
                     }
                 }
@@ -234,23 +221,31 @@ namespace PetriNetApp
             return T;
         }
 
-        public bool transitionIsSafe(Vector<double> T, int number, Matrix<double> MM)
+        public bool transitionIsSafe(Vector<double> T, int number, Matrix<double> M, Matrix<double> MM, Transition Tr)
         {
+
             int fromBufferNumber = transitionFromBuffer(T);
             int toBufferNumber = transitionToBuffer(T);
+            updateBuffers(Buffers, Tr);
             if (fromBufferNumber > 0)
             {
                 int processNumber = getProcessNumber(number - 1);
                 var process = getProcess(number - 1);
                 var operation = getOperation(process, number - 1);
-                var currentBuffer = Buffers.First(i => i.Number == fromBufferNumber);
+                var currentBuffer = Buffers.First(i => i.Number == fromBufferNumber);     
 
                 //last operation in process
-                if (operation == null || operation.Number == process.Operations.Count)
+                if (operation.Number == process.Operations.Count)
+                {
+                    revertBuffers(Tr);
                     return true;
+                }
 
                 if (bufferNotFull(currentBuffer, MM))
+                {
+                    revertBuffers(Tr);
                     return true;
+                }
 
                 List<ProcessConnected> ProcessesToCheck = new List<ProcessConnected>();
                 List<int> CheckedBuffers = new List<int>();
@@ -266,7 +261,11 @@ namespace PetriNetApp
                     CheckedBuffers.Add(tmpCurrentBuff.Number);
 
                     if (proc.process.Operations.Where(j => j.Number > proc.fromOperationNumber).ToList().Count == 0)
+                    {
+                        revertBuffers(Tr);
                         return true;
+                    }
+                        
 
                     foreach (var op in proc.process.Operations.Where(j => j.Number > proc.fromOperationNumber))
                     {
@@ -274,25 +273,29 @@ namespace PetriNetApp
                         if (CheckedBuffers.Any(b => b == buffer.Number))
                             break;
                         if (bufferNotFull(buffer, MM))
+                        {
+                            revertBuffers(Tr);
                             return true;
+                        }
 
                         CheckedBuffers.Add(buffer.Number);
 
-                        //foreach (var ap in buffer.ActiveProcesses)
-                        //{
-                        //    foreach (var ao in ap.ActiveOperations)
-                        //    {
-                        //        var newcheck = new ProcessConnected(ap.process, ao);
-                        //        if (!ProcessesToCheck.Any(c => c.fromOperationNumber == ao && c.process == ap.process))
-                        //            ProcessesToCheck.Add(newcheck);
-                        //    }
-                        //}
-                        ProcessesToCheck.AddRange(buffer.Connected);
+                        foreach (var ap in buffer.ActiveProcesses)
+                        {
+                            foreach (var ao in ap.ActiveOperations)
+                            {
+                                var newcheck = new ProcessConnected(ap.process, ao);
+                                if (!ProcessesToCheck.Any(c => c.fromOperationNumber == ao && c.process == ap.process))
+                                    ProcessesToCheck.Add(newcheck);
+                            }
+                        }
+                        //ProcessesToCheck.AddRange(buffer.Connected);
                     }
                 }
+                revertBuffers(Tr);
                 return false;
             }
-
+            revertBuffers(Tr);
             return true;
         }
 
@@ -399,11 +402,55 @@ namespace PetriNetApp
 
         public bool bufferNotFull(Buffer buffer, Matrix<double> MM)
         {
-            if (MM[buffer.Address.GetValueOrDefault(), 0] > 0 || MM[getMachineAddress(buffer.Number), 0] > 0)
+            if (MM[buffer.Address.GetValueOrDefault(), 0] > 0 /*|| MM[getMachineAddress(buffer.Number), 0] > 0*/)
                 return true;
             return false;
 
 
+        }
+
+
+        public List<Buffer> updateBuffers(List<Buffer> oldBuffers, Transition Tr)
+        {
+
+            var fromBuffer = transitionFromBuffer(Tr.IO);
+            if (fromBuffer > 0)
+            {
+                Process process = getProcess(Tr.Number - 1);
+                var operation = Processes.First(p => p.Number == process.Number)
+                       .Operations.First(o => o.MachineNumber == fromBuffer);
+                oldBuffers.FirstOrDefault(b => b.Number == fromBuffer).takePlace(process, operation.Number);
+            }
+            var toBuffer = transitionToBuffer(Tr.IO);
+            if (toBuffer > 0)
+            {
+                Process process = getProcess(Tr.Number - 1);
+                var operation = Processes.First(p => p.Number == process.Number)
+                       .Operations.First(o => o.MachineNumber == toBuffer);
+                oldBuffers.FirstOrDefault(b => b.Number == toBuffer).emptyPlace(process, operation.Number);
+            }
+            return oldBuffers;
+        }
+
+        public void revertBuffers(Transition Tr)
+        {
+
+            var fromBuffer = transitionFromBuffer(Tr.IO);
+            if (fromBuffer > 0)
+            {
+                Process process = getProcess(Tr.Number - 1);
+                var operation = Processes.First(p => p.Number == process.Number)
+                       .Operations.First(o => o.MachineNumber == fromBuffer);
+                Buffers.FirstOrDefault(b => b.Number == fromBuffer).emptyPlace(process, operation.Number);
+            }
+            var toBuffer = transitionToBuffer(Tr.IO);
+            if (toBuffer > 0)
+            {
+                Process process = getProcess(Tr.Number - 1);
+                var operation = Processes.First(p => p.Number == process.Number)
+                       .Operations.First(o => o.MachineNumber == toBuffer);
+                Buffers.FirstOrDefault(b => b.Number == toBuffer).takePlace(process, operation.Number);
+            }
         }
 
     }
