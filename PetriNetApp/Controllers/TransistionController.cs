@@ -185,14 +185,14 @@ namespace PetriNetApp
                 //int buffersCanBeZero = 0;
                 //while (buffersCanBeZero < 2)
                 //{
-                
+
                 for (int i = 0; i < PreparedTransitions.Count; i++)
                 {
                     T = Vector<double>.Build.Dense(petriNet.Tranzitions, 0);
                     var Tr = PreparedTransitions.ElementAt(i);
                     T[Tr.Number - 1] = 1;
                     var MM = M + petriNet.I * T.ToColumnMatrix();
-                    if (transitionIsSafe(Tr.IO, Tr.Number,M, MM, Tr))
+                    if (transitionIsSafe(Tr.IO, Tr.Number, M, MM, Tr))
                     {
                         PreparedTransitions.RemoveAt(i);
                         //Console.Out.WriteLine("Transition: " + Tr.Number);
@@ -232,7 +232,7 @@ namespace PetriNetApp
                 int processNumber = getProcessNumber(number - 1);
                 var process = getProcess(number - 1);
                 var operation = getOperation(process, number - 1);
-                var currentBuffer = Buffers.First(i => i.Number == fromBufferNumber);     
+                var currentBuffer = Buffers.First(i => i.Number == fromBufferNumber);
 
                 //last operation in process
                 if (operation.Number == process.Operations.Count)
@@ -265,18 +265,23 @@ namespace PetriNetApp
                         revertBuffers(Tr);
                         return true;
                     }
-                        
+
 
                     foreach (var op in proc.process.Operations.Where(j => j.Number > proc.fromOperationNumber))
                     {
                         var buffer = Buffers.First(l => l.Number == op.MachineNumber);
-                        if (CheckedBuffers.Any(b => b == buffer.Number))
-                            break;
+                        if (op.Number == proc.process.Operations.Count())
+                        {
+                            revertBuffers(Tr);
+                            return true;
+                        }
                         if (bufferNotFull(buffer, MM))
                         {
                             revertBuffers(Tr);
                             return true;
                         }
+                        if (CheckedBuffers.Any(b => b == buffer.Number))
+                            continue;
 
                         CheckedBuffers.Add(buffer.Number);
 
