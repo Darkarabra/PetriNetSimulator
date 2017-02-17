@@ -64,6 +64,10 @@ namespace PetriNetApp
             }
             else
             {
+                dt = new DataTable();
+                dt.Columns.Add("time");
+                dt.Columns.Add("transition");
+
                 chart.Series.Clear();
                 chart.Update();
                 chart.DataBindTable(controller.tab);
@@ -84,6 +88,11 @@ namespace PetriNetApp
                     textArea.AppendText("SIMULATION COMPLETED", Color.ForestGreen);
                 else
                     textArea.AppendText("SIMULATION FAILED", Color.Red);
+
+                //XLWorkbook wb = new XLWorkbook();
+                //wb.Worksheets.Add(dt, "wyniki");
+                //var name = "trasitions";
+                //wb.SaveAs(name+".xlsx");
             }
 
         }
@@ -133,6 +142,10 @@ namespace PetriNetApp
 
         public void onTimeChanged(int time, int transition)
         {
+            DataRow dr = dt.NewRow();
+            dr["time"] = time;
+            dr["transition"] = transition;
+            dt.Rows.Add(dr);
             chart.Series[0].Points.AddXY(time, transition);
             chart.Update();
             textArea.Clear();

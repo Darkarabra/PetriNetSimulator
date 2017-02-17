@@ -57,6 +57,11 @@ namespace PetriNetApp
             Connected.Clear();
         }
 
+        public void clerarActive()
+        {
+            ActiveProcesses.Clear();
+        }
+
         public void Connect(Process p, int fromOperationNumber)
         {
             Connected.Add(new ProcessConnected(p, fromOperationNumber));

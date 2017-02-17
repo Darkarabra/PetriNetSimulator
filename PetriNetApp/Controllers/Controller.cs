@@ -98,6 +98,7 @@ namespace PetriNetApp
 
         private void Init(List<sortAlgorithm> sort)
         {
+            Buffers.ForEach(b => b.clerarActive());
             buildPetriNet();
             buildMark();
             timer = new TimerController(Machines);
