@@ -216,7 +216,7 @@ namespace PetriNetApp
                 PreparedTransitions = transitionController.getPreparedTransitions(t, timer, M);
                 //Console.Out.WriteLine("t: " + t);
                 tab = (data.table as IListSource).GetList();
-                chartForm.onTimeChanged(t, T.AbsoluteMaximumIndex() + 1);
+                //chartForm.onTimeChanged(t, T.AbsoluteMaximumIndex() + 1);
 
 
             }

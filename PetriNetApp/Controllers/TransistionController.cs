@@ -251,6 +251,7 @@ namespace PetriNetApp
                 List<int> CheckedBuffers = new List<int>();
                 CheckedBuffers.Add(currentBuffer.Number);
                 //CheckedBuffers.Add(prevBuffer);
+                ProcessesToCheck.Add(new ProcessConnected(process, operation.Number));
                 foreach (var ap in currentBuffer.ActiveProcesses)
                 {
                     foreach (var ao in ap.ActiveOperations)
@@ -260,7 +261,7 @@ namespace PetriNetApp
                             ProcessesToCheck.Add(newcheck);
                     }
                 }
-                ProcessesToCheck.Add(new ProcessConnected(process, operation.Number));
+                
                 
                 for (int i = 0; i < ProcessesToCheck.Count; i++)
                 {
@@ -288,9 +289,15 @@ namespace PetriNetApp
                         //    return true;
                         //}
 
+                        //if(CheckedBuffers.Any(b => b == buffer.Number) && ProcessesToCheck.Count == i+1)
+                        //{
+                        //    revertBuffers(Tr);
+                        //    return false;
+                        //}
+
                         if (CheckedBuffers.Any(b => b == buffer.Number))
                         {
-                            continue;
+                            break;
                         }
                             
 

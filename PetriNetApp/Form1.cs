@@ -170,18 +170,23 @@ namespace PetriNetApp
         private void stopBtn_Click(object sender, EventArgs e)
         {
             DataTable sim = new DataTable();
+            dt = new DataTable();
+            dt.Columns.Add("time");
+            dt.Columns.Add("transition");
+
             sim.Columns.Add("B1");
             sim.Columns.Add("B2");
             sim.Columns.Add("B3");
             sim.Columns.Add("FIFO");
             sim.Columns.Add("MF");
             sim.Columns.Add("SF");
+            int MIN = 5;
             int MAX = 10;
-            for (int b1 = 1; b1 <= MAX; b1++)
+            for (int b1 = MIN; b1 <= MAX; b1++)
             {
-                for(int b2 = 1; b2 <= MAX; b2++)
+                for(int b2 = MIN; b2 <= MAX; b2++)
                 {
-                    for (int b3 = 1; b3 <= MAX; b3++)
+                    for (int b3 = MIN; b3 <= MAX; b3++)
                     {
                         controller.defineBufferCapacity(1, b1);
                         controller.defineBufferCapacity(2, b2);
@@ -202,7 +207,7 @@ namespace PetriNetApp
             }
             XLWorkbook wb = new XLWorkbook();
             wb.Worksheets.Add(sim, "wyniki");
-            wb.SaveAs("wyn1_10.xlsx");
+            wb.SaveAs("test2.xlsx");
             Console.Out.WriteLine("done");
             
         }
