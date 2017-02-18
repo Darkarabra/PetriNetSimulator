@@ -41,6 +41,7 @@ namespace PetriNetApp
         public DataController data { get; set; }
         int t;
         public IList tab = null;
+        string machinesPercentage;
 
         bool stopped;
 
@@ -106,6 +107,9 @@ namespace PetriNetApp
             t = 0;
             PreparedTransitions = transitionController.getPreparedTransitions(t, timer, M);
             stopped = false;
+            machinesPercentage = printMachinesPercentage();
+
+
         }
         #endregion
 
@@ -122,6 +126,36 @@ namespace PetriNetApp
             }
 
             return result;
+        }
+
+        public string printMachinesPercentage()
+        {
+            string result = "Machines percentage usage: ";
+            int sum = 0;
+            foreach(var p in Processes)
+            {
+                var tmpsum = p.Operations.Sum(i => i.Time);
+                sum += Inputs.First(i => i.Number == p.Number).Value * tmpsum;
+            }
+            foreach(var m in Buffers)
+            {
+                int timeM = 0;
+                foreach (var p in Processes)
+                {
+                    var tmp = 0;
+                    foreach(var o in p.Operations.Where(i => i.MachineNumber == m.Number))
+                    {
+                        tmp += o.Time;
+                    }
+                   
+                    timeM += Inputs.First(i => i.Number == p.Number).Value * tmp;                    
+                }
+                decimal calculated = decimal.Round((decimal)timeM * (decimal)100 / (decimal)sum);
+                result += " M"+ m.Number + ": " + calculated + "% |";
+                
+            }
+            return result;
+            
         }
 
 
@@ -216,7 +250,10 @@ namespace PetriNetApp
                 PreparedTransitions = transitionController.getPreparedTransitions(t, timer, M);
                 //Console.Out.WriteLine("t: " + t);
                 tab = (data.table as IListSource).GetList();
-                //chartForm.onTimeChanged(t, T.AbsoluteMaximumIndex() + 1);
+                var tr = T.AbsoluteMaximumIndex() + 1;
+                if (!T.Any(i => i > 0))
+                    tr = 0;
+                chartForm.onTimeChanged(t, tr, machinesPercentage);
 
 
             }

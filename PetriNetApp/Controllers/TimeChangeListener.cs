@@ -8,6 +8,6 @@ namespace PetriNetApp
 {
     public interface TimeChangeListener
     {
-       void onTimeChanged(int t, int tr);
+        void onTimeChanged(int t, int tr, string machines);
     }
 }

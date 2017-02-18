@@ -289,15 +289,26 @@ namespace PetriNetApp
                         //    return true;
                         //}
 
-                        //if(CheckedBuffers.Any(b => b == buffer.Number) && ProcessesToCheck.Count == i+1)
-                        //{
-                        //    revertBuffers(Tr);
-                        //    return false;
-                        //}
+                        if(!bufferNotFull(buffer, MM) && !buffer.ActiveProcesses.Any(a => a.process.Number == proc.process.Number)){
+                            if(ProcessesToCheck.Count == i + 1)
+                            {
+                                revertBuffers(Tr);
+                                return false;
+                            }
+                            break;
+                        }
+
+                        if (CheckedBuffers.Any(b => b == buffer.Number) && ProcessesToCheck.Count == i + 1)
+                        {
+                            revertBuffers(Tr);
+                            return false;
+                        }
 
                         if (CheckedBuffers.Any(b => b == buffer.Number))
                         {
-                            break;
+                            //break;
+                            revertBuffers(Tr);
+                            return false;
                         }
                             
 

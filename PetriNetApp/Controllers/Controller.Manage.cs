@@ -52,12 +52,18 @@ namespace PetriNetApp
             PreparedTransitions.Clear();
 
         }
-        public void submitDefaultData(int machines, int processes)
+        public void submitDefaultData(int machines, int processes, bool clear)
         {
-            clearData();
+            int p = Processes?.Count() ?? 0;
+            if (clear)
+            {
+                clearData();
+                processes = 0;
+            }
+                
             Machines = machines;
             ProcessesAmount = processes;
-            int p = 0;
+            
             while (p < processes)
             {
                 var process = new Process(p + 1);

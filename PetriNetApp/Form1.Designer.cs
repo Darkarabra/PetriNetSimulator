@@ -69,7 +69,7 @@
             this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.textArea = new System.Windows.Forms.RichTextBox();
             this.simulationFast = new System.Windows.Forms.CheckBox();
-            this.stopBtn = new System.Windows.Forms.Button();
+            this.testBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.machinesInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.processInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SequenceAddM)).BeginInit();
@@ -125,7 +125,7 @@
             // 
             // simulateBtn
             // 
-            this.simulateBtn.Location = new System.Drawing.Point(325, 545);
+            this.simulateBtn.Location = new System.Drawing.Point(432, 545);
             this.simulateBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.simulateBtn.Name = "simulateBtn";
             this.simulateBtn.Size = new System.Drawing.Size(75, 30);
@@ -569,29 +569,29 @@
             // simulationFast
             // 
             this.simulationFast.AutoSize = true;
-            this.simulationFast.Location = new System.Drawing.Point(195, 551);
+            this.simulationFast.Location = new System.Drawing.Point(302, 551);
             this.simulationFast.Name = "simulationFast";
             this.simulationFast.Size = new System.Drawing.Size(124, 21);
             this.simulationFast.TabIndex = 35;
             this.simulationFast.Text = "Fast simulation";
             this.simulationFast.UseVisualStyleBackColor = true;
             // 
-            // stopBtn
+            // testBtn
             // 
-            this.stopBtn.Location = new System.Drawing.Point(410, 545);
-            this.stopBtn.Name = "stopBtn";
-            this.stopBtn.Size = new System.Drawing.Size(75, 30);
-            this.stopBtn.TabIndex = 36;
-            this.stopBtn.Text = "Stop";
-            this.stopBtn.UseVisualStyleBackColor = true;
-            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            this.testBtn.Location = new System.Drawing.Point(295, 13);
+            this.testBtn.Name = "testBtn";
+            this.testBtn.Size = new System.Drawing.Size(75, 30);
+            this.testBtn.TabIndex = 36;
+            this.testBtn.Text = "Test";
+            this.testBtn.UseVisualStyleBackColor = true;
+            this.testBtn.Click += new System.EventHandler(this.testBtn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1415, 586);
-            this.Controls.Add(this.stopBtn);
+            this.Controls.Add(this.testBtn);
             this.Controls.Add(this.simulationFast);
             this.Controls.Add(this.textArea);
             this.Controls.Add(this.checkBox3);
@@ -668,7 +668,7 @@
         private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.RichTextBox textArea;
         private System.Windows.Forms.CheckBox simulationFast;
-        private System.Windows.Forms.Button stopBtn;
+        private System.Windows.Forms.Button testBtn;
     }
 }
 

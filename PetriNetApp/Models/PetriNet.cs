@@ -21,7 +21,7 @@ namespace PetriNetApp
         int Machines { get; set; }
         int ProcessesAmount { get; set; }
 
-        int firstMachineId { get; set; }
+        int firstMachineAddress { get; set; }
         List<Process> Processes { get; set; }
 
         /// <summary>
@@ -69,14 +69,14 @@ namespace PetriNetApp
             I.Clear();
             int p = 0;
             int t = 0;
-            firstMachineId = getFirstMachineId();
+            firstMachineAddress = getFirstMachineId();
 
             foreach (var process in Processes)
             {
                 foreach (var operation in process.Operations)
                 {
-                    int machine = firstMachineId + operation.MachineNumber - 1;
-                    int buffer = firstMachineId + Machines + operation.MachineNumber - 1;
+                    int machine = firstMachineAddress + operation.MachineNumber - 1;
+                    int buffer = firstMachineAddress + Machines + operation.MachineNumber - 1;
                     if (operation.Number == 1)
                     {
                         //in
@@ -104,7 +104,7 @@ namespace PetriNetApp
                     i.Number == operation.Number + 1);
                     if (nextOperation != null)
                     {
-                        var nextBuffer = firstMachineId + Machines + nextOperation.MachineNumber - 1;
+                        var nextBuffer = firstMachineAddress + Machines + nextOperation.MachineNumber - 1;
                         I[nextBuffer, t++] = OUTPUT;
                     }
                     else

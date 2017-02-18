@@ -19,6 +19,8 @@ namespace PetriNetApp
 
         Controller controller;
         DataTable dt;
+        int machines;
+        int processes;
 
         public Form1()
         {
@@ -28,6 +30,8 @@ namespace PetriNetApp
             controller.chartForm = this;
             LoadTextBoxes();
             dt = new DataTable();
+            machines = 0;
+            processes = 0;
         }
 
 
@@ -46,11 +50,21 @@ namespace PetriNetApp
 
         private void submitBtn_Click(object sender, EventArgs e)
         {
-
-            controller.submitDefaultData((int)machinesInput.Value, (int)processInput.Value);
-            sequenceText.Text = string.Empty;
-            BuffersText.Clear();
-            InputsText.Clear();
+            var newMachines = (int)machinesInput.Value;
+            int newProcesses = (int)processInput.Value;
+            bool clear = false;
+            if (newMachines < machines || newProcesses < processes)
+            {
+                var confirm = MessageBox.Show("If you submit new parameters all other parameters will be lost.", "Submit", MessageBoxButtons.YesNo);
+                if (confirm == DialogResult.Yes)
+                {
+                    sequenceText.Text = string.Empty;
+                    BuffersText.Clear();
+                    InputsText.Clear();
+                    clear = true;
+                }
+            }
+            controller.submitDefaultData((int)machinesInput.Value, (int)processInput.Value, clear);
             
         }
 
@@ -91,8 +105,8 @@ namespace PetriNetApp
 
                 //XLWorkbook wb = new XLWorkbook();
                 //wb.Worksheets.Add(dt, "wyniki");
-                //var name = "trasitions";
-                //wb.SaveAs(name+".xlsx");
+                //var name = "trasitions11";
+                //wb.SaveAs(name + ".xlsx");
             }
 
         }
@@ -108,8 +122,13 @@ namespace PetriNetApp
 
         private void clearSeqBtn_Click(object sender, EventArgs e)
         {
-            controller.clearProcessesSequence();
-            sequenceText.Text = string.Empty;
+            var confirm = MessageBox.Show("Are you sure that you want to clear sequences?", "Clear", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes)
+            {
+                controller.clearProcessesSequence();
+                sequenceText.Text = string.Empty;
+                sequenceText.Text = controller.printSequence();
+            }
         }
 
         private void BufferCSaveBtn_Click(object sender, EventArgs e)
@@ -140,15 +159,18 @@ namespace PetriNetApp
 
         }
 
-        public void onTimeChanged(int time, int transition)
+        public void onTimeChanged(int time, int transition, string machinesPercentage)
         {
             DataRow dr = dt.NewRow();
             dr["time"] = time;
             dr["transition"] = transition;
-            dt.Rows.Add(dr);
+            if(transition != 0)
+                dt.Rows.Add(dr);
             chart.Series[0].Points.AddXY(time, transition);
             chart.Update();
             textArea.Clear();
+            textArea.AppendText(machinesPercentage);
+            textArea.AppendText(Environment.NewLine);
             textArea.AppendText("t: " + time);
             textArea.AppendText(Environment.NewLine);
             textArea.AppendText("Firing transition: " + transition, Color.Orange);
@@ -167,48 +189,53 @@ namespace PetriNetApp
 
         }
 
-        private void stopBtn_Click(object sender, EventArgs e)
+        private void testBtn_Click(object sender, EventArgs e)
         {
-            DataTable sim = new DataTable();
-            dt = new DataTable();
-            dt.Columns.Add("time");
-            dt.Columns.Add("transition");
-
-            sim.Columns.Add("B1");
-            sim.Columns.Add("B2");
-            sim.Columns.Add("B3");
-            sim.Columns.Add("FIFO");
-            sim.Columns.Add("MF");
-            sim.Columns.Add("SF");
-            int MIN = 5;
-            int MAX = 10;
-            for (int b1 = MIN; b1 <= MAX; b1++)
+            var confirm = MessageBox.Show("Test może potrwać dłuższy czas. Czy jesteś pewien?", "Test" ,MessageBoxButtons.YesNo);
+            if(confirm == DialogResult.Yes)
             {
-                for(int b2 = MIN; b2 <= MAX; b2++)
+                DataTable sim = new DataTable();
+                dt = new DataTable();
+                dt.Columns.Add("time");
+                dt.Columns.Add("transition");
+
+                sim.Columns.Add("B1");
+                sim.Columns.Add("B2");
+                sim.Columns.Add("B3");
+                sim.Columns.Add("FIFO");
+                sim.Columns.Add("MF");
+                sim.Columns.Add("SF");
+                int MIN = 5;
+                int MAX = 10;
+                for (int b1 = MIN; b1 <= MAX; b1++)
                 {
-                    for (int b3 = MIN; b3 <= MAX; b3++)
+                    for (int b2 = MIN; b2 <= MAX; b2++)
                     {
-                        controller.defineBufferCapacity(1, b1);
-                        controller.defineBufferCapacity(2, b2);
-                        controller.defineBufferCapacity(3, b3);
-                        int FIFO = controller.Simulate(sortAlgorithm.FIFO);
-                        int MF = controller.Simulate(sortAlgorithm.MCF);
-                        int SF = controller.Simulate(sortAlgorithm.STF);
-                        DataRow dr = sim.NewRow();
-                        dr["B1"] = b1;
-                        dr["B2"] = b2;
-                        dr["B3"] = b3;
-                        dr["FIFO"] = FIFO;
-                        dr["MF"] = MF;
-                        dr["SF"] = SF;
-                        sim.Rows.Add(dr);
+                        for (int b3 = MIN; b3 <= MAX; b3++)
+                        {
+                            controller.defineBufferCapacity(1, b1);
+                            controller.defineBufferCapacity(2, b2);
+                            controller.defineBufferCapacity(3, b3);
+                            int FIFO = controller.Simulate(sortAlgorithm.FIFO);
+                            int MF = controller.Simulate(sortAlgorithm.MCF);
+                            int SF = controller.Simulate(sortAlgorithm.STF);
+                            DataRow dr = sim.NewRow();
+                            dr["B1"] = b1;
+                            dr["B2"] = b2;
+                            dr["B3"] = b3;
+                            dr["FIFO"] = FIFO;
+                            dr["MF"] = MF;
+                            dr["SF"] = SF;
+                            sim.Rows.Add(dr);
+                        }
                     }
                 }
+                XLWorkbook wb = new XLWorkbook();
+                wb.Worksheets.Add(sim, "wyniki");
+                wb.SaveAs("test2.xlsx");
+                Console.Out.WriteLine("done");
             }
-            XLWorkbook wb = new XLWorkbook();
-            wb.Worksheets.Add(sim, "wyniki");
-            wb.SaveAs("test2.xlsx");
-            Console.Out.WriteLine("done");
+
             
         }
 
