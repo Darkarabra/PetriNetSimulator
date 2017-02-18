@@ -74,6 +74,99 @@ namespace PetriNetApp
 
         #endregion
 
+        #region print data
+
+        public string printSequence()
+        {
+            string result = string.Empty;
+            foreach (var list in Processes)
+            {
+                result += "P" + list.Number + ": ";
+                result += string.Join(", ", list.Operations.Select(i => i.MachineNumber + " (" + i.Time + ")"));
+                result += "; \n";
+            }
+
+            return result;
+        }
+
+        public string printMachinesPercentage()
+        {
+            string result = "Machines percentage usage: ";
+            int sum = 0;
+            foreach (var p in Processes)
+            {
+                var tmpsum = p.Operations.Sum(i => i.Time);
+                sum += Inputs.First(i => i.Number == p.Number).Value * tmpsum;
+            }
+            foreach (var m in Buffers)
+            {
+                int timeM = 0;
+                foreach (var p in Processes)
+                {
+                    var tmp = 0;
+                    foreach (var o in p.Operations.Where(i => i.MachineNumber == m.Number))
+                    {
+                        tmp += o.Time;
+                    }
+
+                    timeM += Inputs.First(i => i.Number == p.Number).Value * tmp;
+                }
+                decimal calculated = decimal.Round((decimal)timeM * (decimal)100 / (decimal)sum);
+                result += " M" + m.Number + ": " + calculated + "% |";
+
+            }
+            return result;
+
+        }
+
+        public string printCurrentBufferProcesses(int number)
+        {
+            var buffer = Buffers.First(i => i.Number == number);
+            string result = "B" + number + ": ";
+            if (buffer.ActiveProcesses.Count == 0)
+                result += "0";
+            else
+            {
+                foreach(var p in buffer.ActiveProcesses)
+                {
+                    result += "P" + p.process.Number + ": " + p.Count + " ";
+                }
+            }
+            return result;
+        }
+
+        public string printBuffers()
+        {
+            string result = string.Empty;
+            foreach (var b in Buffers)
+            {
+                result += "B" + b.Number + ": ";
+                result += string.Join(", ", b.Capacity);
+                result += "; ";
+            }
+            return result;
+        }
+
+        public string printInputs()
+        {
+            string result = string.Empty;
+            foreach (var i in Inputs)
+            {
+                result += "In" + i.Number + ": ";
+                result += string.Join(", ", i.Value);
+                result += "; ";
+            }
+            return result;
+        }
+
+        public string printPreparedTranzitions()
+        {
+            string result = string.Empty;
+            result = string.Join(", ", PreparedTransitions.Select(i => i.Number));
+            return result;
+        }
+        #endregion
+
         #region Parameters
         public bool addMachineToProcess(int processId, int machineId, int time)
         {
@@ -84,6 +177,16 @@ namespace PetriNetApp
                 .Add(new Operation(time, sequence.Operations.Count + 1, machineId, processId));
             return true;
 
+        }
+
+        public int BuffersCount()
+        {
+            return Buffers.Count();
+        }
+
+        public int getBufferCapacity(int buffer)
+        {
+            return Buffers.First(i => i.Number == buffer).Capacity;
         }
 
         public bool defineBufferCapacity(int buffer, int capacity)

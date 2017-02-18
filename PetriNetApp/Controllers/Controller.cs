@@ -43,7 +43,7 @@ namespace PetriNetApp
         public IList tab = null;
         string machinesPercentage;
 
-        bool stopped;
+        public bool stopped { get; private set; }
 
         public Controller()
         {
@@ -113,84 +113,6 @@ namespace PetriNetApp
         }
         #endregion
 
-        #region print data
-
-        public string printSequence()
-        {
-            string result = string.Empty;
-            foreach (var list in Processes)
-            {
-                result += "P" + list.Number + ": ";
-                result += string.Join(", ", list.Operations.Select(i => i.MachineNumber + " (" + i.Time + ")"));
-                result += "; \n";
-            }
-
-            return result;
-        }
-
-        public string printMachinesPercentage()
-        {
-            string result = "Machines percentage usage: ";
-            int sum = 0;
-            foreach(var p in Processes)
-            {
-                var tmpsum = p.Operations.Sum(i => i.Time);
-                sum += Inputs.First(i => i.Number == p.Number).Value * tmpsum;
-            }
-            foreach(var m in Buffers)
-            {
-                int timeM = 0;
-                foreach (var p in Processes)
-                {
-                    var tmp = 0;
-                    foreach(var o in p.Operations.Where(i => i.MachineNumber == m.Number))
-                    {
-                        tmp += o.Time;
-                    }
-                   
-                    timeM += Inputs.First(i => i.Number == p.Number).Value * tmp;                    
-                }
-                decimal calculated = decimal.Round((decimal)timeM * (decimal)100 / (decimal)sum);
-                result += " M"+ m.Number + ": " + calculated + "% |";
-                
-            }
-            return result;
-            
-        }
-
-
-        public string printBuffers()
-        {
-            string result = string.Empty;
-            foreach (var b in Buffers)
-            {
-                result += "B" + b.Number + ": ";
-                result += string.Join(", ", b.Capacity);
-                result += "; ";
-            }
-            return result;
-        }
-
-        public string printInputs()
-        {
-            string result = string.Empty;
-            foreach (var i in Inputs)
-            {
-                result += "In" + i.Number + ": ";
-                result += string.Join(", ", i.Value);
-                result += "; ";
-            }
-            return result;
-        }
-
-        public string printPreparedTranzitions()
-        {
-            string result = string.Empty;
-            result = string.Join(", ", PreparedTransitions.Select(i => i.Number));
-            return result;
-        }
-        #endregion
-
         public bool successResult()
         {
             int count = 0;
@@ -210,25 +132,24 @@ namespace PetriNetApp
 
         #region Simulation
 
-        public int Simulate(sortAlgorithm alg)
+        public int Simulate(sortAlgorithm alg, bool test = false)
         {
             var list = new List<sortAlgorithm>();
             list.Add(alg);
-            var result = Simulate(list);
+            var result = Simulate(list, test);
             if (result == true)
                 return t;
             else return -1;
         }
 
-        public bool Simulate(List<sortAlgorithm> sortList)
+        public bool Simulate(List<sortAlgorithm> sortList, bool test=false)
         {
             Init(sortList);
 
-            if (stopped)
-                return false;
-
             while (PreparedTransitions.Count > 0 || timer.AnyOperationActive())
             {
+                if (stopped)
+                    return false;
 
                 T = transitionController.chooseTransiztion(timer, M);
                 if (T.Any(i => i > 0))
@@ -253,7 +174,8 @@ namespace PetriNetApp
                 var tr = T.AbsoluteMaximumIndex() + 1;
                 if (!T.Any(i => i > 0))
                     tr = 0;
-                chartForm.onTimeChanged(t, tr, machinesPercentage);
+                if(!test)
+                    chartForm.onTimeChanged(t, tr, machinesPercentage);
 
 
             }

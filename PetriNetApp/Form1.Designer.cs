@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.submitBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -64,12 +64,16 @@
             this.label9 = new System.Windows.Forms.Label();
             this.sampleDataBtn = new System.Windows.Forms.Button();
             this.chart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.textArea = new System.Windows.Forms.RichTextBox();
             this.simulationFast = new System.Windows.Forms.CheckBox();
             this.testBtn = new System.Windows.Forms.Button();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.stopBtn = new System.Windows.Forms.Button();
+            this.radioButton_FIFO = new System.Windows.Forms.RadioButton();
+            this.radioButton_MCF = new System.Windows.Forms.RadioButton();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.radioButton_SOF = new System.Windows.Forms.RadioButton();
+            this.save_btn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.machinesInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.processInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SequenceAddM)).BeginInit();
@@ -83,6 +87,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.InputValue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.InputNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // submitBtn
@@ -125,7 +130,7 @@
             // 
             // simulateBtn
             // 
-            this.simulateBtn.Location = new System.Drawing.Point(432, 545);
+            this.simulateBtn.Location = new System.Drawing.Point(317, 123);
             this.simulateBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.simulateBtn.Name = "simulateBtn";
             this.simulateBtn.Size = new System.Drawing.Size(75, 30);
@@ -319,7 +324,7 @@
             this.BufferCapacity.Location = new System.Drawing.Point(191, 31);
             this.BufferCapacity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.BufferCapacity.Minimum = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
@@ -327,7 +332,7 @@
             this.BufferCapacity.Size = new System.Drawing.Size(45, 22);
             this.BufferCapacity.TabIndex = 23;
             this.BufferCapacity.Value = new decimal(new int[] {
-            1,
+            2,
             0,
             0,
             0});
@@ -359,7 +364,7 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox1.Size = new System.Drawing.Size(464, 128);
+            this.groupBox1.Size = new System.Drawing.Size(473, 128);
             this.groupBox1.TabIndex = 26;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Processes";
@@ -385,7 +390,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(464, 94);
+            this.groupBox2.Size = new System.Drawing.Size(473, 94);
             this.groupBox2.TabIndex = 27;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "General";
@@ -404,11 +409,11 @@
             this.groupBox3.Controls.Add(this.label8);
             this.groupBox3.Controls.Add(this.BufferCSaveBtn);
             this.groupBox3.Controls.Add(this.BufferCapacity);
-            this.groupBox3.Location = new System.Drawing.Point(21, 286);
+            this.groupBox3.Location = new System.Drawing.Point(21, 304);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(464, 108);
+            this.groupBox3.Size = new System.Drawing.Size(473, 108);
             this.groupBox3.TabIndex = 28;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Values";
@@ -509,67 +514,37 @@
             // 
             // chart
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart.Legends.Add(legend1);
+            chartArea3.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea3);
+            legend3.Name = "Legend1";
+            this.chart.Legends.Add(legend3);
             this.chart.Location = new System.Drawing.Point(536, 36);
             this.chart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart.Name = "chart";
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chart.Series.Add(series1);
-            this.chart.Size = new System.Drawing.Size(863, 376);
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            series3.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chart.Series.Add(series3);
+            this.chart.Size = new System.Drawing.Size(757, 369);
             this.chart.TabIndex = 30;
             this.chart.Text = "chart1";
-            // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(21, 432);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(60, 21);
-            this.checkBox1.TabIndex = 31;
-            this.checkBox1.Text = "FIFO";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(21, 460);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(180, 21);
-            this.checkBox2.TabIndex = 32;
-            this.checkBox2.Text = "machine connected first";
-            this.checkBox2.TextAlign = System.Drawing.ContentAlignment.TopLeft;
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(21, 488);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(202, 21);
-            this.checkBox3.TabIndex = 33;
-            this.checkBox3.Text = "shortest operation time first";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.chart.MouseMove += new System.Windows.Forms.MouseEventHandler(this.chart_MouseMove);
             // 
             // textArea
             // 
             this.textArea.Location = new System.Drawing.Point(536, 445);
             this.textArea.Name = "textArea";
-            this.textArea.Size = new System.Drawing.Size(496, 130);
+            this.textArea.Size = new System.Drawing.Size(757, 130);
             this.textArea.TabIndex = 34;
             this.textArea.Text = "";
             // 
             // simulationFast
             // 
             this.simulationFast.AutoSize = true;
-            this.simulationFast.Location = new System.Drawing.Point(302, 551);
+            this.simulationFast.Location = new System.Drawing.Point(191, 129);
             this.simulationFast.Name = "simulationFast";
             this.simulationFast.Size = new System.Drawing.Size(124, 21);
             this.simulationFast.TabIndex = 35;
@@ -578,7 +553,7 @@
             // 
             // testBtn
             // 
-            this.testBtn.Location = new System.Drawing.Point(295, 13);
+            this.testBtn.Location = new System.Drawing.Point(295, 12);
             this.testBtn.Name = "testBtn";
             this.testBtn.Size = new System.Drawing.Size(75, 30);
             this.testBtn.TabIndex = 36;
@@ -586,23 +561,96 @@
             this.testBtn.UseVisualStyleBackColor = true;
             this.testBtn.Click += new System.EventHandler(this.testBtn_Click);
             // 
+            // backgroundWorker
+            // 
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            // 
+            // stopBtn
+            // 
+            this.stopBtn.Enabled = false;
+            this.stopBtn.Location = new System.Drawing.Point(392, 123);
+            this.stopBtn.Name = "stopBtn";
+            this.stopBtn.Size = new System.Drawing.Size(75, 30);
+            this.stopBtn.TabIndex = 37;
+            this.stopBtn.Text = "Stop";
+            this.stopBtn.UseVisualStyleBackColor = true;
+            this.stopBtn.Click += new System.EventHandler(this.stopBtn_Click);
+            // 
+            // radioButton_FIFO
+            // 
+            this.radioButton_FIFO.AutoSize = true;
+            this.radioButton_FIFO.Checked = true;
+            this.radioButton_FIFO.Location = new System.Drawing.Point(11, 30);
+            this.radioButton_FIFO.Name = "radioButton_FIFO";
+            this.radioButton_FIFO.Size = new System.Drawing.Size(59, 21);
+            this.radioButton_FIFO.TabIndex = 38;
+            this.radioButton_FIFO.TabStop = true;
+            this.radioButton_FIFO.Text = "FIFO";
+            this.radioButton_FIFO.UseVisualStyleBackColor = true;
+            // 
+            // radioButton_MCF
+            // 
+            this.radioButton_MCF.AutoSize = true;
+            this.radioButton_MCF.Location = new System.Drawing.Point(11, 57);
+            this.radioButton_MCF.Name = "radioButton_MCF";
+            this.radioButton_MCF.Size = new System.Drawing.Size(179, 21);
+            this.radioButton_MCF.TabIndex = 39;
+            this.radioButton_MCF.TabStop = true;
+            this.radioButton_MCF.Text = "Machine connected first";
+            this.radioButton_MCF.UseVisualStyleBackColor = true;
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.radioButton_SOF);
+            this.groupBox5.Controls.Add(this.radioButton_FIFO);
+            this.groupBox5.Controls.Add(this.radioButton_MCF);
+            this.groupBox5.Controls.Add(this.stopBtn);
+            this.groupBox5.Controls.Add(this.simulationFast);
+            this.groupBox5.Controls.Add(this.simulateBtn);
+            this.groupBox5.Location = new System.Drawing.Point(21, 428);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(473, 159);
+            this.groupBox5.TabIndex = 41;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Simulation";
+            // 
+            // radioButton_SOF
+            // 
+            this.radioButton_SOF.AutoSize = true;
+            this.radioButton_SOF.Location = new System.Drawing.Point(11, 84);
+            this.radioButton_SOF.Name = "radioButton_SOF";
+            this.radioButton_SOF.Size = new System.Drawing.Size(180, 21);
+            this.radioButton_SOF.TabIndex = 40;
+            this.radioButton_SOF.TabStop = true;
+            this.radioButton_SOF.Text = "Shortest operations first";
+            this.radioButton_SOF.UseVisualStyleBackColor = true;
+            // 
+            // save_btn
+            // 
+            this.save_btn.Enabled = false;
+            this.save_btn.Location = new System.Drawing.Point(1169, 410);
+            this.save_btn.Name = "save_btn";
+            this.save_btn.Size = new System.Drawing.Size(124, 29);
+            this.save_btn.TabIndex = 41;
+            this.save_btn.Text = "Save transitions";
+            this.save_btn.UseVisualStyleBackColor = true;
+            this.save_btn.Click += new System.EventHandler(this.save_btn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1415, 586);
+            this.ClientSize = new System.Drawing.Size(1316, 592);
+            this.Controls.Add(this.save_btn);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.testBtn);
-            this.Controls.Add(this.simulationFast);
             this.Controls.Add(this.textArea);
-            this.Controls.Add(this.checkBox3);
-            this.Controls.Add(this.checkBox2);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.chart);
             this.Controls.Add(this.sampleDataBtn);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.simulateBtn);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "Form1";
             this.Text = "PetriNet Simulator";
@@ -623,8 +671,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.InputValue)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.InputNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -663,12 +712,16 @@
         private System.Windows.Forms.RichTextBox sequenceText;
         private System.Windows.Forms.Button sampleDataBtn;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox3;
         private System.Windows.Forms.RichTextBox textArea;
         private System.Windows.Forms.CheckBox simulationFast;
         private System.Windows.Forms.Button testBtn;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.Button stopBtn;
+        private System.Windows.Forms.RadioButton radioButton_FIFO;
+        private System.Windows.Forms.RadioButton radioButton_MCF;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.RadioButton radioButton_SOF;
+        private System.Windows.Forms.Button save_btn;
     }
 }
 
