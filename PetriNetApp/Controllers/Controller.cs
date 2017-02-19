@@ -86,7 +86,7 @@ namespace PetriNetApp
                 Inputs.First(i => i.Number == process.Number).Address = place;
                 Inputs.First(i => i.Number == process.Number).CorrespondingOutput = output;
                 place += process.Operations.Count * 3 + 2;
-                foreach(var o in process.Operations)
+                foreach (var o in process.Operations)
                 {
                     Buffers.First(i => i.Number == o.MachineNumber).Connect(process, o.Number);
                 }
@@ -142,7 +142,7 @@ namespace PetriNetApp
             else return -1;
         }
 
-        public bool Simulate(List<sortAlgorithm> sortList, bool test=false)
+        public bool Simulate(List<sortAlgorithm> sortList, bool test = false)
         {
             Init(sortList);
 
@@ -174,7 +174,7 @@ namespace PetriNetApp
                 var tr = T.AbsoluteMaximumIndex() + 1;
                 if (!T.Any(i => i > 0))
                     tr = 0;
-                if(!test)
+                if (!test)
                     chartForm.onTimeChanged(t, tr, machinesPercentage);
 
 
