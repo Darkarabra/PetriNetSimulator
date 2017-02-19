@@ -184,7 +184,7 @@ namespace PetriNetApp
                 Console.Out.WriteLine("Simulation completed.");
             else
                 Console.Out.WriteLine("Simulation failed.");
-            Console.Out.WriteLine(M.Column(0).ToString());
+            //Console.Out.WriteLine(M.Column(0).ToString());
             return successResult();
         }
 

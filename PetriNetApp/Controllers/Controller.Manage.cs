@@ -124,13 +124,17 @@ namespace PetriNetApp
             var buffer = Buffers.First(i => i.Number == number);
             string result = "B" + number + ": ";
             if (buffer.ActiveProcesses.Count == 0)
-                result += "0";
+                result += $"0 / {buffer.Capacity}";
             else
             {
+                int sum = 0;
+                string tmp = "";
                 foreach(var p in buffer.ActiveProcesses)
                 {
-                    result += "P" + p.process.Number + ": " + p.Count + " ";
+                    sum += p.Count;
+                    tmp += "P" + p.process.Number + ": " + p.Count + " ";
                 }
+                result += $"{sum} / {buffer.Capacity}, " + tmp;
             }
             return result;
         }

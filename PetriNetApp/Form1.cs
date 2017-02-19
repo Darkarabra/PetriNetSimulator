@@ -15,7 +15,7 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace PetriNetApp
 {
-    public partial class Form1 : Form, TimeChangeListener
+    public partial class Form1 : Form, TimeChangeListener, TestRunListener
     {
 
         Controller controller;
@@ -25,6 +25,10 @@ namespace PetriNetApp
         List<sortAlgorithm> sortList;
         Point? prevPosition = null;
         ToolTip tooltip = new ToolTip();
+        DataTable sim;
+        int MIN;
+        int MAX;
+        string testFile;
         public Form1()
         {
 
@@ -36,6 +40,8 @@ namespace PetriNetApp
 
             backgroundWorker.WorkerSupportsCancellation = true;
             backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker_test.WorkerSupportsCancellation = true;
+            backgroundWorker_test.WorkerReportsProgress = true;
         }
 
 
@@ -85,8 +91,8 @@ namespace PetriNetApp
             }
             else
             {
-                simulateBtn.Enabled = false;
-                stopBtn.Enabled = true;
+                setButtonsToActive(false);
+                stoptest_btn.Enabled = false;
 
                 dt = new DataTable();
                 dt.Columns.Add("time");
@@ -109,12 +115,7 @@ namespace PetriNetApp
                     sortList.Add(sortAlgorithm.STF);
 
                 backgroundWorker.RunWorkerAsync();
-                
 
-                //XLWorkbook wb = new XLWorkbook();
-                //wb.Worksheets.Add(dt, "wyniki");
-                //var name = "trasitions11";
-                //wb.SaveAs(name + ".xlsx");
             }
 
         }
@@ -172,9 +173,10 @@ namespace PetriNetApp
             DataRow dr = dt.NewRow();
             dr["time"] = time;
             dr["transition"] = transition;
-            if(transition != 0)
+            if (transition != 0)
                 dt.Rows.Add(dr);
-            this.Invoke(new MethodInvoker(delegate {
+            this.Invoke(new MethodInvoker(delegate
+            {
                 chart.Series[0].Points.AddXY(time, transition);
                 chart.Update();
                 textArea.Clear();
@@ -185,7 +187,7 @@ namespace PetriNetApp
                 {
                     var color = Color.Green;
                     if (t.Time > 0)
-                        color = Color.Red; 
+                        color = Color.Red;
                     textArea.AppendText("M" + t.MachineNumber + ": P" + t.ProcessNumber, color);
                     textArea.AppendText("           ");
                     textArea.AppendText(controller.printCurrentBufferProcesses(t.MachineNumber) + "\n", Color.Blue);
@@ -194,67 +196,20 @@ namespace PetriNetApp
                 if (!simulationFast.Checked)
                     System.Threading.Thread.Sleep(500);
             }));
-            
+
 
         }
 
         private void testBtn_Click(object sender, EventArgs e)
         {
-            int MIN = 5;
-            int MAX = 10;
-            var confirm = MessageBox.Show($"Test Buffers 1 - 3 for capacities {MIN} to {MAX}. It may take few minutes a while. Are you sure?" , "Warning" ,MessageBoxButtons.YesNo);
-            if(confirm == DialogResult.Yes)
-            {
-                bool test = true;
-                simulateBtn.Enabled = false;
-                testBtn.Enabled = false;
-                stopBtn.Enabled = true;
-                DataTable sim = new DataTable();
-                dt = new DataTable();
-                dt.Columns.Add("time");
-                dt.Columns.Add("transition");
-
-                sim.Columns.Add("B1");
-                sim.Columns.Add("B2");
-                sim.Columns.Add("B3");
-                sim.Columns.Add("FIFO");
-                sim.Columns.Add("MF");
-                sim.Columns.Add("SF");
-               
-                for (int b1 = MIN; b1 <= MAX; b1++)
-                {
-                    for (int b2 = MIN; b2 <= MAX; b2++)
-                    {
-                        for (int b3 = MIN; b3 <= MAX; b3++)
-                        {
-                            controller.defineBufferCapacity(1, b1);
-                            controller.defineBufferCapacity(2, b2);
-                            controller.defineBufferCapacity(3, b3);
-                            int FIFO = controller.Simulate(sortAlgorithm.FIFO, test);
-                            int MF = controller.Simulate(sortAlgorithm.MCF, test);
-                            int SF = controller.Simulate(sortAlgorithm.STF, test);
-                            DataRow dr = sim.NewRow();
-                            dr["B1"] = b1;
-                            dr["B2"] = b2;
-                            dr["B3"] = b3;
-                            dr["FIFO"] = FIFO;
-                            dr["MF"] = MF;
-                            dr["SF"] = SF;
-                            sim.Rows.Add(dr);
-                        }
-                    }
-                }
-                XLWorkbook wb = new XLWorkbook();
-                wb.Worksheets.Add(sim, "wyniki");
-                wb.SaveAs("test2.xlsx");
-                Console.Out.WriteLine("done");
-            }        
+            Form3 testDialog = new Form3(this);
+            testDialog.ShowDialog(this);
         }
 
         private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             e.Result = new simResult(controller.Simulate(sortList));
-            
+
         }
 
         private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -262,13 +217,11 @@ namespace PetriNetApp
             bool result = (e.Result as simResult).result;
             if (result == true)
                 textArea.AppendText("SIMULATION COMPLETED", Color.ForestGreen);
-            else if(controller.stopped)
+            else if (controller.stopped)
                 textArea.AppendText("SIMULATION STOPPED BY USER", Color.DarkOrange);
             else
                 textArea.AppendText("SIMULATION FAILED", Color.Red);
-            simulateBtn.Enabled = true;
-            stopBtn.Enabled = false;
-            save_btn.Enabled = true;
+            setButtonsToActive();
         }
         private class simResult
         {
@@ -283,8 +236,7 @@ namespace PetriNetApp
         {
             controller.onBreakEvent();
             backgroundWorker.CancelAsync();
-            simulateBtn.Enabled = true;
-            stopBtn.Enabled = false;
+            setButtonsToActive();
         }
 
         private void chart_MouseMove(object sender, MouseEventArgs e)
@@ -295,7 +247,7 @@ namespace PetriNetApp
 
             prevPosition = pos;
             tooltip.RemoveAll();
-            
+
             var results = chart.HitTest(pos.X, pos.Y, false, ChartElementType.DataPoint);
             foreach (var result in results)
             {
@@ -322,6 +274,131 @@ namespace PetriNetApp
         {
             var dialog = new Form2(dt);
             dialog.ShowDialog(this);
+        }
+
+        static IEnumerable<IEnumerable<T>> GetCombinations<T>(IEnumerable<T> list, int length)
+        {
+            if (length == 1) return list.Select(t => new T[] { t }).ToList();
+            return GetCombinations(list, length - 1)
+                .SelectMany(t => list,
+                    (t1, t2) => t1.Concat(new T[] { t2 }).ToList()).ToList();
+        }
+
+        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            bool test = true;
+            sim = new DataTable();
+            dt = new DataTable();
+            dt.Columns.Add("time");
+            dt.Columns.Add("transition");
+
+            List<int> capacities = new List<int>();
+            for (int val = MIN; val <= MAX; val++)
+            {
+                capacities.Add(val);
+            }
+            for (int b = 1; b <= machines; b++)
+            {
+                sim.Columns.Add($"B{b}");
+            }
+            sim.Columns.Add("FIFO");
+            sim.Columns.Add("MF");
+            sim.Columns.Add("SF");
+
+            var res = GetCombinations(capacities, machines).ToList();
+
+            for (int i = 0; i < res.Count; i++)
+            {
+                DataRow dr = sim.NewRow();
+                for (int b = 1; b <= machines; b++)
+                {
+                    var capacity = res.ElementAt(i).ElementAt(b - 1);
+                    controller.defineBufferCapacity(b, capacity);
+                    dr[$"B{b}"] = capacity;
+                }
+                if ((worker.CancellationPending == true))
+                {
+                    e.Result = new simResult(false);
+                    e.Cancel = true;
+                    break;
+                }
+
+                int FIFO = controller.Simulate(sortAlgorithm.FIFO, test);
+                int MF = controller.Simulate(sortAlgorithm.MCF, test);
+                int SF = controller.Simulate(sortAlgorithm.STF, test);
+                dr["FIFO"] = FIFO;
+                dr["MF"] = MF;
+                dr["SF"] = SF;
+                sim.Rows.Add(dr);
+                decimal progress = (decimal)(i + 1) * (decimal)100 / ((decimal)(res.Count()));
+                worker.ReportProgress((int)progress);
+            }
+            e.Result = new simResult(true);
+        }
+
+        private void stoptest_btn_Click(object sender, EventArgs e)
+        {
+            backgroundWorker_test.CancelAsync();
+            setButtonsToActive();
+        }
+
+        private void setButtonsToActive(bool active = true)
+        {
+            testBtn.Enabled = active;
+            simulateBtn.Enabled = active;
+            stoptest_btn.Enabled = !active;
+            stopBtn.Enabled = !active;
+        }
+
+        private void backgroundWorker_test_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            textArea.Clear();
+            textArea.AppendText($"{controller.printMachinesPercentage()} \n\n");
+            textArea.AppendText($"Test for buffers capacities from {MIN} to {MAX}. \n");
+            textArea.AppendText("Progress: " + e.ProgressPercentage.ToString() + "%");
+        }
+
+        public void onTestRun(int min, int max, string file)
+        {
+            MIN = min;
+            MAX = max;
+            testFile = file;
+            setButtonsToActive(false);
+            stopBtn.Enabled = false;
+            backgroundWorker_test.RunWorkerAsync();
+        }
+
+        private void backgroundWorker_test_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
+            bool result = !e.Cancelled ? (e.Result as simResult).result : false;
+            if (result == true)
+            {
+                textArea.AppendText(" \nTEST COMPLETED. \n ", Color.ForestGreen);
+
+                saveSimFile();
+            }
+            else
+            {
+                var confirm = MessageBox.Show("Test stopped. Save results to file anyway?", "Stop", MessageBoxButtons.YesNo);
+                if (confirm == DialogResult.Yes)
+                    saveSimFile();
+                textArea.AppendText($"\nTEST STOPPED.", Color.DarkOrange);
+                if (confirm == DialogResult.Yes)
+                    textArea.AppendText($"\nResults saved as {testFile}.xlsx file. ");
+                else
+                    textArea.AppendText($"\nResults not saved. ");
+            }
+
+            setButtonsToActive();
+        }
+
+        private void saveSimFile()
+        {
+            XLWorkbook wb = new XLWorkbook();
+            wb.Worksheets.Add(sim, "wyniki");
+            wb.SaveAs(testFile + ".xlsx");
         }
     }
 }

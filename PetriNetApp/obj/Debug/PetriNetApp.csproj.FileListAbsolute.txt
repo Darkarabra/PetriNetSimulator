@@ -27,3 +27,4 @@ C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriN
 C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.Properties.Resources.resources
 C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.csproj.GenerateResource.Cache
 C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.Form2.resources
+C:\Users\Małgorzata\Source\Repos\PetriNetSimulator\PetriNetApp\obj\Debug\PetriNetApp.Form3.resources

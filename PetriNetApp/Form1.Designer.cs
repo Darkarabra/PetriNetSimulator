@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.submitBtn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -72,8 +72,12 @@
             this.radioButton_FIFO = new System.Windows.Forms.RadioButton();
             this.radioButton_MCF = new System.Windows.Forms.RadioButton();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.stoptest_btn = new System.Windows.Forms.Button();
             this.radioButton_SOF = new System.Windows.Forms.RadioButton();
             this.save_btn = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.backgroundWorker_test = new System.ComponentModel.BackgroundWorker();
             ((System.ComponentModel.ISupportInitialize)(this.machinesInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.processInput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.SequenceAddM)).BeginInit();
@@ -88,6 +92,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.InputNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chart)).BeginInit();
             this.groupBox5.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // submitBtn
@@ -130,7 +136,7 @@
             // 
             // simulateBtn
             // 
-            this.simulateBtn.Location = new System.Drawing.Point(317, 123);
+            this.simulateBtn.Location = new System.Drawing.Point(295, 125);
             this.simulateBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.simulateBtn.Name = "simulateBtn";
             this.simulateBtn.Size = new System.Drawing.Size(75, 30);
@@ -503,7 +509,7 @@
             // 
             // sampleDataBtn
             // 
-            this.sampleDataBtn.Location = new System.Drawing.Point(373, 12);
+            this.sampleDataBtn.Location = new System.Drawing.Point(21, 13);
             this.sampleDataBtn.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.sampleDataBtn.Name = "sampleDataBtn";
             this.sampleDataBtn.Size = new System.Drawing.Size(108, 30);
@@ -514,20 +520,20 @@
             // 
             // chart
             // 
-            chartArea3.Name = "ChartArea1";
-            this.chart.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart.Legends.Add(legend3);
-            this.chart.Location = new System.Drawing.Point(536, 36);
+            chartArea1.Name = "ChartArea1";
+            this.chart.ChartAreas.Add(chartArea1);
+            legend1.Name = "Legend1";
+            this.chart.Legends.Add(legend1);
+            this.chart.Location = new System.Drawing.Point(17, 26);
             this.chart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.chart.Name = "chart";
-            series3.ChartArea = "ChartArea1";
-            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            series3.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            series3.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-            this.chart.Series.Add(series3);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.Legend = "Legend1";
+            series1.Name = "Transitions";
+            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+            this.chart.Series.Add(series1);
             this.chart.Size = new System.Drawing.Size(757, 369);
             this.chart.TabIndex = 30;
             this.chart.Text = "chart1";
@@ -535,7 +541,7 @@
             // 
             // textArea
             // 
-            this.textArea.Location = new System.Drawing.Point(536, 445);
+            this.textArea.Location = new System.Drawing.Point(17, 435);
             this.textArea.Name = "textArea";
             this.textArea.Size = new System.Drawing.Size(757, 130);
             this.textArea.TabIndex = 34;
@@ -544,7 +550,7 @@
             // simulationFast
             // 
             this.simulationFast.AutoSize = true;
-            this.simulationFast.Location = new System.Drawing.Point(191, 129);
+            this.simulationFast.Location = new System.Drawing.Point(165, 131);
             this.simulationFast.Name = "simulationFast";
             this.simulationFast.Size = new System.Drawing.Size(124, 21);
             this.simulationFast.TabIndex = 35;
@@ -553,7 +559,7 @@
             // 
             // testBtn
             // 
-            this.testBtn.Location = new System.Drawing.Point(295, 12);
+            this.testBtn.Location = new System.Drawing.Point(17, 29);
             this.testBtn.Name = "testBtn";
             this.testBtn.Size = new System.Drawing.Size(75, 30);
             this.testBtn.TabIndex = 36;
@@ -569,7 +575,7 @@
             // stopBtn
             // 
             this.stopBtn.Enabled = false;
-            this.stopBtn.Location = new System.Drawing.Point(392, 123);
+            this.stopBtn.Location = new System.Drawing.Point(374, 125);
             this.stopBtn.Name = "stopBtn";
             this.stopBtn.Size = new System.Drawing.Size(75, 30);
             this.stopBtn.TabIndex = 37;
@@ -602,6 +608,7 @@
             // 
             // groupBox5
             // 
+            this.groupBox5.Controls.Add(this.groupBox6);
             this.groupBox5.Controls.Add(this.radioButton_SOF);
             this.groupBox5.Controls.Add(this.radioButton_FIFO);
             this.groupBox5.Controls.Add(this.radioButton_MCF);
@@ -614,6 +621,28 @@
             this.groupBox5.TabIndex = 41;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Simulation";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.testBtn);
+            this.groupBox6.Controls.Add(this.stoptest_btn);
+            this.groupBox6.Location = new System.Drawing.Point(278, 13);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(180, 69);
+            this.groupBox6.TabIndex = 44;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Test";
+            // 
+            // stoptest_btn
+            // 
+            this.stoptest_btn.Enabled = false;
+            this.stoptest_btn.Location = new System.Drawing.Point(97, 29);
+            this.stoptest_btn.Name = "stoptest_btn";
+            this.stoptest_btn.Size = new System.Drawing.Size(74, 30);
+            this.stoptest_btn.TabIndex = 43;
+            this.stoptest_btn.Text = "Stop";
+            this.stoptest_btn.UseVisualStyleBackColor = true;
+            this.stoptest_btn.Click += new System.EventHandler(this.stoptest_btn_Click);
             // 
             // radioButton_SOF
             // 
@@ -629,7 +658,7 @@
             // save_btn
             // 
             this.save_btn.Enabled = false;
-            this.save_btn.Location = new System.Drawing.Point(1169, 410);
+            this.save_btn.Location = new System.Drawing.Point(650, 400);
             this.save_btn.Name = "save_btn";
             this.save_btn.Size = new System.Drawing.Size(124, 29);
             this.save_btn.TabIndex = 41;
@@ -637,16 +666,33 @@
             this.save_btn.UseVisualStyleBackColor = true;
             this.save_btn.Click += new System.EventHandler(this.save_btn_Click);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.save_btn);
+            this.groupBox4.Controls.Add(this.textArea);
+            this.groupBox4.Controls.Add(this.chart);
+            this.groupBox4.Location = new System.Drawing.Point(514, 6);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(790, 581);
+            this.groupBox4.TabIndex = 42;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Visualisation";
+            // 
+            // backgroundWorker_test
+            // 
+            this.backgroundWorker_test.WorkerReportsProgress = true;
+            this.backgroundWorker_test.WorkerSupportsCancellation = true;
+            this.backgroundWorker_test.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
+            this.backgroundWorker_test.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker_test_ProgressChanged);
+            this.backgroundWorker_test.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker_test_RunWorkerCompleted);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1316, 592);
-            this.Controls.Add(this.save_btn);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox5);
-            this.Controls.Add(this.testBtn);
-            this.Controls.Add(this.textArea);
-            this.Controls.Add(this.chart);
             this.Controls.Add(this.sampleDataBtn);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -673,6 +719,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.chart)).EndInit();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -722,6 +770,10 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.RadioButton radioButton_SOF;
         private System.Windows.Forms.Button save_btn;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.ComponentModel.BackgroundWorker backgroundWorker_test;
+        private System.Windows.Forms.Button stoptest_btn;
+        private System.Windows.Forms.GroupBox groupBox6;
     }
 }
 
